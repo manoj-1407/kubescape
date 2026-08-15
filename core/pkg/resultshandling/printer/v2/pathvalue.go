@@ -205,8 +205,6 @@ func fixPathsToStringFiltered(control *resourcesresults.ResourceAssociatedContro
 	return paths
 }
 
-// AssistedRemediationPathsWithCurrentValuesFiltered is like AssistedRemediationPathsWithCurrentValues
-// but redacts sensitive field values (Secret.data, Secret.stringData) unless showSecrets is true.
 // enrichedPathsForFieldUnredacted is like enrichedPathsForField but never suppresses values
 // for sensitive paths — used when --show-secrets is set and the operator explicitly wants
 // Secret.data / Secret.stringData values surfaced.
@@ -237,10 +235,11 @@ func reviewPathsWithCurrentValuesUnredacted(control *resourcesresults.ResourceAs
 	return enrichedPathsForFieldUnredacted(control, resource, func(p armotypes.PosturePaths) string { return p.ReviewPath })
 }
 
+// AssistedRemediationPathsWithCurrentValuesFiltered is like AssistedRemediationPathsWithCurrentValues
+// but redacts sensitive field values (Secret.data, Secret.stringData) unless showSecrets is true.
 func AssistedRemediationPathsWithCurrentValuesFiltered(control *resourcesresults.ResourceAssociatedControl, resource workloadinterface.IMetadata, showSecrets bool) []string {
 	kind := resource.GetKind()
 	if showSecrets {
-		// extract values for all paths including sensitive ones — caller explicitly opted in
 		fixPaths := fixPathsToStringFiltered(control, kind, true)
 		deletePaths := deletePathsToString(control)
 		enrichedReview := reviewPathsWithCurrentValuesUnredacted(control, resource)

@@ -592,8 +592,6 @@ func TestAssistedRemediationPathsWithCurrentValuesFiltered(t *testing.T) {
 	})
 
 	t.Run("showSecrets=true extracts non-secret values same as unfiltered", func(t *testing.T) {
-		// for non-secret paths, showSecrets=true and the unfiltered variant
-		// both extract the current value — result must be identical
 		resource := &mockResource{obj: normalObj, kind: "Pod"}
 		ctrl := makeControlWithPaths([]string{"spec.containers[0].securityContext.privileged"}, nil)
 		got := AssistedRemediationPathsWithCurrentValuesFiltered(ctrl, resource, true)
